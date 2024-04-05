@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+from PIL import Image
 
 # from utils import *
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
@@ -23,7 +24,7 @@ from sklearn.preprocessing import (
     StandardScaler,
     MinMaxScaler,
     OrdinalEncoder,
-    LabelEncoder
+    LabelEncoder,
 )
 from sklearn.svm import SVR, SVC
 from sklearn.ensemble import (
@@ -78,7 +79,11 @@ def page_first():
     )
 
     st.subheader("Как это работает:")
-    st.image("images\Alghoritm.svg", caption="Алгоритм сайта")
+
+    current_script_dir = os.path.dirname(os.path.abspath(__file__))
+    algo_path = Image.open(os.path.join(current_script_dir, "Alghoritm.png"))
+
+    st.image(algo_path, caption="Алгоритм сайта")
     # uploaded_files = st.file_uploader("", accept_multiple_files=True)
 
     st.subheader("Зачем?")
