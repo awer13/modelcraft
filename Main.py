@@ -531,7 +531,7 @@ Ordinal Encoding присваивает уникальные числовые з
 
 **Зачем это нужно**: Нормализация особенно полезна, когда данные содержат атрибуты с различными масштабами, и вы используете алгоритмы, чувствительные к величине признаков, такие как k-NN, нейронные сети, или алгоритмы, использующие меры расстояния."""
             )
-            st.image("images\min_max_scaling.png", "Формула min-max scaling")
+            # st.image("images\min_max_scaling.png", "Формула min-max scaling")
             st.write(
                 """
 ### Стандартизация
@@ -539,15 +539,15 @@ Ordinal Encoding присваивает уникальные числовые з
 
 **Зачем это нужно**: Стандартизация полезна, когда данные распределены приблизительно нормально, и особенно важна для алгоритмов, предполагающих нормальное распределение данных входных признаков, таких как логистическая регрессия, линейные и радиальные SVM."""
             )
-            st.image(
-                "images\z_score_normalization.png", "Формула z-score normalization"
-            )
+            # st.image(
+            #     "images\z_score_normalization.png", "Формула z-score normalization"
+            # )
             st.write(
                 """
 ### Логарифмическая трансформация
 Логарифмическая трансформация — это преобразование данных с помощью логарифма, часто натурального, что помогает уменьшить скос распределения данных. Преобразование применяется по формуле:"""
             )
-            st.image("images\log_transformation.png", "Формула log transformation")
+            # st.image("images\log_transformation.png", "Формула log transformation")
         combined_object_string_cols = change_df.select_dtypes(
             include=["object", "string"]
         ).columns.tolist()
