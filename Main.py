@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 from PIL import Image
-
+from sklearn.neural_network import MLPClassifier, MLPRegressor
 # from utils import *
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
@@ -531,7 +531,6 @@ Ordinal Encoding присваивает уникальные числовые з
 
 **Зачем это нужно**: Нормализация особенно полезна, когда данные содержат атрибуты с различными масштабами, и вы используете алгоритмы, чувствительные к величине признаков, такие как k-NN, нейронные сети, или алгоритмы, использующие меры расстояния."""
             )
-            # st.image("images\min_max_scaling.png", "Формула min-max scaling")
             st.write(
                 """
 ### Стандартизация
@@ -539,15 +538,11 @@ Ordinal Encoding присваивает уникальные числовые з
 
 **Зачем это нужно**: Стандартизация полезна, когда данные распределены приблизительно нормально, и особенно важна для алгоритмов, предполагающих нормальное распределение данных входных признаков, таких как логистическая регрессия, линейные и радиальные SVM."""
             )
-            # st.image(
-            #     "images\z_score_normalization.png", "Формула z-score normalization"
-            # )
             st.write(
                 """
 ### Логарифмическая трансформация
 Логарифмическая трансформация — это преобразование данных с помощью логарифма, часто натурального, что помогает уменьшить скос распределения данных. Преобразование применяется по формуле:"""
             )
-            # st.image("images\log_transformation.png", "Формула log transformation")
         combined_object_string_cols = change_df.select_dtypes(
             include=["object", "string"]
         ).columns.tolist()
@@ -716,6 +711,7 @@ def page_fifth():
         "Random Forest Regression",
         "Support Vector Machine Regression",
         "Gradient Boosting Regression",
+        "Multi Layer Perceptron Regression"
     ]
     classification_models = [
         "Logistic Regression",
@@ -723,6 +719,7 @@ def page_fifth():
         "Random Forest Classification",
         "Support Vector Machine CLassification",
         "Gradient Boosting Classification",
+        "Multi Layer Perceptron Classifier"
     ]
 
     complete_df = st.session_state["data"]
@@ -963,7 +960,7 @@ def page_fifth():
                 model = custom_svr(kernel, degree)
             else:
                 model = SVR()
-        else:
+        elif options_regression == "Gradient Boosting Regression":
             options_gbc_regression = st.radio(
                 "Сделайте выбор:",
                 ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
@@ -1050,7 +1047,22 @@ def page_fifth():
                 )
             else:
                 model = GradientBoostingRegressor()
-
+        else:
+            options_mlp_regression = st.radio(
+                "Сделайте выбор:",
+                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                key=persist("choose_parameters_for_mlpc"),
+            )
+            if options_mlp_regression == "Выбрать параметры вручную":
+                col1, col2 = st.columns(2)
+                with col1:
+                    activation = st.selectbox("`activation` Функция активации для скрытого слоя", ["relu", "logistic", "tanh", "identity"], key=persist("select_activation_mlpc"))
+                with col2:
+                    solver = st.selectbox("`solver` Решающая программа для оптимизации веса", ["adam", "lbfgs", "sgd"],  key=persist("select_solver_mlpc"))
+                model = custom_mlp_regressor(activation_func_c=activation, solver_c=solver)
+            else:
+                model = MLPRegressor()
+            
     else:
         options_clf = st.selectbox(
             "Выберите один из алгоритмов Классификации: ",
@@ -1268,7 +1280,7 @@ def page_fifth():
                 model = custom_svc(kernel, degree)
             else:
                 model = SVC()
-        else:
+        elif options_clf == "Gradient Boosting Classification":
             options_gbc_classification = st.radio(
                 "Сделайте выбор:",
                 ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
@@ -1355,7 +1367,23 @@ def page_fifth():
                 )
             else:
                 model = GradientBoostingClassifier()
-
+        else:
+            options_mlp_classification = st.radio(
+                "Сделайте выбор:",
+                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                key=persist("choose_parameters_for_mlpc"),
+            )
+            if options_mlp_classification == "Выбрать параметры вручную":
+                col1, col2 = st.columns(2)
+                with col1:
+                    activation = st.selectbox("`activation` Функция активации для скрытого слоя", ["relu", "logistic", "tanh", "identity"], key=persist("select_activation_mlpc"))
+                with col2:
+                    solver = st.selectbox("`solver` Решающая программа для оптимизации веса", ["adam", "lbfgs", "sgd"],  key=persist("select_solver_mlpc"))
+                model = custom_mlp_classifier(activation_func_c=activation, solver_c=solver)
+            else:
+                model = MLPClassifier()
+            
+            
     st.write(model)
 
     color_theme_list = [
@@ -2030,6 +2058,27 @@ def custom_gbr(
         min_samples_split=min_samples_split_c,
         min_samples_leaf=min_samples_leaf_c,
         ccp_alpha=ccp_alpha_c,
+    )
+    return model
+
+
+def custom_mlp_classifier(
+    activation_func_c="relu",
+    solver_c="adam",
+):
+    model = MLPClassifier(
+        activation=activation_func_c,
+        solver=solver_c
+    )
+    return model
+
+def custom_mlp_regressor(
+    activation_func_c="relu",
+    solver_c="adam",
+):
+    model = MLPRegressor(
+        activation=activation_func_c,
+        solver=solver_c
     )
     return model
 
