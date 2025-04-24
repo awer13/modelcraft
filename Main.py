@@ -3,7 +3,6 @@ import pandas as pd
 import os
 from PIL import Image
 from sklearn.neural_network import MLPClassifier, MLPRegressor
-# from utils import *
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.svm import SVR, SVC
@@ -37,9 +36,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from streamlit import session_state as _state
 
+st.set_page_config(layout="wide")
 
 def main():
-    # Register your pages
     pages = {
         "Главная страница": page_first,
         "Загрузка данных": page_second,
@@ -48,43 +47,37 @@ def main():
         "Тренировка и проверка модели": page_fifth,
     }
 
-    st.sidebar.title("Model Craft")
+    st.sidebar.title("iQuat⚡")
 
-    # Widget to select your page, you can choose between radio buttons or a selectbox
+
+
     page = st.sidebar.radio("Выберите подходящую страницу", tuple(pages.keys()))
-    # page = st.sidebar.radio("Select your page", tuple(pages.keys()))
 
-    # Display the selected page with the session state
     pages[page]()
 
 
 def page_first():
     col1, col2, col3 = st.columns(3)
     with col2:
-        st.title("Model Craft")
+        st.title("iQuat Model Trainer")
 
-    st.subheader("Добро пожаловать в Model Craft :sunglasses:")
 
     st.write(
         """
-            Этот сайт предлагает уникальную платформу для аналитиков данных, исследователей и энтузиастов машинного обучения, 
+            Эта платформа предлагает уникальную возможность для аналитиков данных, исследователей и энтузиастов в сфере машинного обучения, 
             предоставляя инструменты для загрузки собственных наборов данных, выбора и обучения моделей машинного обучения, а 
             также визуализации результатов и оценки метрик. Цель сайта - сделать процесс анализа данных и машинного обучения 
             более доступным и интуитивно понятным для пользователей разного уровня подготовки, ускоряя научные исследования и 
             разработку продуктов. 
-            
-            Model Craft стремится стать мостом между сложными алгоритмами машинного обучения и практическими 
-            потребностями пользователей, облегчая извлечение ценной информации из данных.
         """
     )
 
     st.subheader("Как это работает:")
 
     current_script_dir = os.path.dirname(os.path.abspath(__file__))
-    algo_path = Image.open(os.path.join(current_script_dir, "Alghoritm.png"))
+    algo_path = Image.open(os.path.join(current_script_dir, "Algorithm.png"))
 
     st.image(algo_path, caption="Алгоритм сайта")
-    # uploaded_files = st.file_uploader("", accept_multiple_files=True)
 
     st.subheader("Зачем?")
     st.write(
@@ -96,7 +89,6 @@ def page_first():
         """
     )
 
-    st.subheader("Теперь давай попробуем загрузить твой первый набор данных!")
 
 
 def page_second():
@@ -107,7 +99,7 @@ def page_second():
         _, file_extension = os.path.splitext(uploaded_file.name)
         if file_extension.lower() == ".csv":
             try:
-                df = pd.read_csv(uploaded_file)
+                df = pd.read_csv(uploaded_file, index_col=0)
                 if "original_data" not in st.session_state:
                     st.session_state["original_data"] = df
                 else:
@@ -584,903 +576,917 @@ Ordinal Encoding присваивает уникальные числовые з
 
 
 def page_forth():
-    st.title("Визуализация датафрейма")
-    complete_df = st.session_state["data"]
-    st.subheader("Сохраненный датафрейм")
-    st.dataframe(complete_df, hide_index=True)
+    if "uploaded" not in st.session_state:
+        st.info("Сначала вы должны загрузить данные")
+    else:    
+        st.title("Визуализация датафрейма")
+        complete_df = st.session_state["data"]
+        st.subheader("Сохраненный датафрейм")
+        st.dataframe(complete_df, hide_index=True)
 
-    st.subheader("Корреляция параметров")
-    color_theme_list = [
-        "Blues",
-        "viridis",
-        "plasma",
-        "inferno",
-        "magma",
-        "cividis",
-        "Greys",
-        "Purples",
-        "Greens",
-        "Oranges",
-        "Reds",
-        "YlOrBr",
-        "YlOrRd",
-        "OrRd",
-        "PuRd",
-        "RdPu",
-        "BuPu",
-        "GnBu",
-        "PuBu",
-        "YlGnBu",
-        "PuBuGn",
-        "BuGn",
-        "YlGn",
-        "PiYG",
-        "PRGn",
-        "BrBG",
-        "PuOr",
-        "RdGy",
-        "RdBu",
-        "RdYlBu",
-        "RdYlGn",
-        "Spectral",
-        "coolwarm",
-        "bwr",
-        "seismic",
-    ]
-    color_for_corr = st.selectbox(
-        "Выберите цвет для графика",
-        color_theme_list,
-        key=persist("select_color_for_corr"),
-    )
-    correlation_matrix_visualize(complete_df, color_for_corr)
+        st.subheader("Корреляция параметров")
+        color_theme_list = [
+            "Blues",
+            "viridis",
+            "plasma",
+            "inferno",
+            "magma",
+            "cividis",
+            "Greys",
+            "Purples",
+            "Greens",
+            "Oranges",
+            "Reds",
+            "YlOrBr",
+            "YlOrRd",
+            "OrRd",
+            "PuRd",
+            "RdPu",
+            "BuPu",
+            "GnBu",
+            "PuBu",
+            "YlGnBu",
+            "PuBuGn",
+            "BuGn",
+            "YlGn",
+            "PiYG",
+            "PRGn",
+            "BrBG",
+            "PuOr",
+            "RdGy",
+            "RdBu",
+            "RdYlBu",
+            "RdYlGn",
+            "Spectral",
+            "coolwarm",
+            "bwr",
+            "seismic",
+        ]
+        color_for_corr = st.selectbox(
+            "Выберите цвет для графика",
+            color_theme_list,
+            key=persist("select_color_for_corr"),
+        )
+        correlation_matrix_visualize(complete_df, color_for_corr)
 
-    st.subheader("1.Визуализация датафрейма")
-    plots = ["Line Plot", "Scatter Plot", "Histogram Plot", "Box Plot", "Density Plot"]
-    visualizations = st.selectbox(
-        "Выберите график который вы хотите увидеть",
-        plots,
-        key=persist("select_type_of_visualization_for_dataset"),
-    )
-    x_axis = st.selectbox(
-        "Выберите параметр который будет расположен по оси X",
-        complete_df.columns,
-        key=persist("select_column_for_x_axis"),
-    )
-    y_axis = st.selectbox(
-        "Выберите параметр который будет расположен по оси Y",
-        complete_df.columns,
-        key=persist("select_column_for_y_axis"),
-    )
-    color_theme_list = [
-        "blues",
-        "cividis",
-        "greens",
-        "inferno",
-        "magma",
-        "plasma",
-        "reds",
-        "turbo",
-        "viridis",
-    ]
-
-    use_hue = create_toggle(
-        "use_hue_toggle", "Включить группировку точек данных по цвету"
-    )
-
-    if use_hue:
-        hue = st.selectbox(
-            "Выберите параметр, с помощью которого будут группироваться точки данных по цвету",
+        st.subheader("1.Визуализация датафрейма")
+        plots = ["Line Plot", "Scatter Plot", "Histogram Plot", "Box Plot", "Density Plot"]
+        visualizations = st.selectbox(
+            "Выберите график который вы хотите увидеть",
+            plots,
+            key=persist("select_type_of_visualization_for_dataset"),
+        )
+        x_axis = st.selectbox(
+            "Выберите параметр который будет расположен по оси X",
             complete_df.columns,
-            key="select_hue",  # Assuming persist() function is defined elsewhere to handle session state
+            key=persist("select_column_for_x_axis"),
         )
-        selected_color_theme = st.selectbox(
-            "Select a color theme", color_theme_list, key=persist("select_color_theme")
+        y_axis = st.selectbox(
+            "Выберите параметр который будет расположен по оси Y",
+            complete_df.columns,
+            key=persist("select_column_for_y_axis"),
         )
-    else:
-        hue = None
-        selected_color_theme = st.color_picker(
-            "Pick A Color", "#00f900", key=persist("color")
+        color_theme_list = [
+            "blues",
+            "cividis",
+            "greens",
+            "inferno",
+            "magma",
+            "plasma",
+            "reds",
+            "turbo",
+            "viridis",
+        ]
+
+        use_hue = create_toggle(
+            "use_hue_toggle", "Включить группировку точек данных по цвету"
         )
 
-    # Then, depending on the type of visualization selected by the user:
-    if visualizations == "Line Plot":
-        line_chart(
-            complete_df, x_axis, y_axis, input_color_theme=selected_color_theme, hue=hue
-        )
-    elif visualizations == "Scatter Plot":
-        scatter_plot(
-            complete_df, x_axis, y_axis, input_color_theme=selected_color_theme, hue=hue
-        )
-    elif visualizations == "Histogram Plot":
-        histogram(complete_df, x_axis, input_color_theme=selected_color_theme, hue=hue)
-    elif visualizations == "Box Plot":
-        box_plot(
-            complete_df, x_axis, y_axis, input_color_theme=selected_color_theme, hue=hue
-        )
-    elif visualizations == "Density Plot":
-        density_plot(
-            complete_df, x_axis, input_color_theme=selected_color_theme, hue=hue
-        )
+        if use_hue:
+            hue = st.selectbox(
+                "Выберите параметр, с помощью которого будут группироваться точки данных по цвету",
+                complete_df.columns,
+                key="select_hue",  # Assuming persist() function is defined elsewhere to handle session state
+            )
+            selected_color_theme = st.selectbox(
+                "Select a color theme", color_theme_list, key=persist("select_color_theme")
+            )
+        else:
+            hue = None
+            selected_color_theme = st.color_picker(
+                "Pick A Color", "#4bdbff", key=persist("color")
+            )
+
+        # Then, depending on the type of visualization selected by the user:
+        if visualizations == "Line Plot":
+            line_chart(
+                complete_df, x_axis, y_axis, input_color_theme=selected_color_theme, hue=hue
+            )
+        elif visualizations == "Scatter Plot":
+            scatter_plot(
+                complete_df, x_axis, y_axis, input_color_theme=selected_color_theme, hue=hue
+            )
+        elif visualizations == "Histogram Plot":
+            histogram(complete_df, x_axis, input_color_theme=selected_color_theme, hue=hue)
+        elif visualizations == "Box Plot":
+            box_plot(
+                complete_df, x_axis, y_axis, input_color_theme=selected_color_theme, hue=hue
+            )
+        elif visualizations == "Density Plot":
+            density_plot(
+                complete_df, x_axis, input_color_theme=selected_color_theme, hue=hue
+            )
 
 
 def page_fifth():
-    st.title("Тренировка и проверка модели")
-    regression_models = [
-        "Linear Regression",
-        "Decision Tree Regression",
-        "Random Forest Regression",
-        "Support Vector Machine Regression",
-        "Gradient Boosting Regression",
-        "Multi Layer Perceptron Regression"
-    ]
-    classification_models = [
-        "Logistic Regression",
-        "Decision Tree CLassifier",
-        "Random Forest Classification",
-        "Support Vector Machine CLassification",
-        "Gradient Boosting Classification",
-        "Multi Layer Perceptron Classifier"
-    ]
-
-    complete_df = st.session_state["data"]
-    st.subheader("Сохраненный датафрейм")
-    st.dataframe(complete_df, hide_index=True)
-    st.subheader("1.Разделение на тренировочный и тестовый датафрейм")
-    y_column = st.selectbox(
-        "Выберите целевой параметр, значение которого будут спрогнозированы:",
-        complete_df.columns,
-        key=persist("select_y_column"),
-    )
-    X = delete_columns(complete_df, y_column)
-    y = complete_df[y_column]
-    col1, col2, col3 = st.columns([5, 0.3, 1])
-    with col1:
-        st.subheader("X:")
-        st.dataframe(X, hide_index=True)
-        st.write("Размер датафрейма :", X.shape)
-    with col3:
-        st.subheader("y:")
-        st.dataframe(y, hide_index=True)
-        st.write("Размер датафрейма :", y.shape[0])
-
-    size = st.slider(
-        "Выберите размер тестового датафрейма:",
-        0.0,
-        1.0,
-        0.2,
-        step=0.01,
-        key=persist("slider_size_of_test_dataset"),
-    )
-    st.write(f"Размер тестового датафрейма {size * 100} % от общего датафрейма")
-    X_train, X_test, y_train, y_test = custom_train_test_split(X, y, size=size)
-
-    col1, col2, col3 = st.columns([5, 0.3, 1])
-    with col1:
-        st.subheader("X_train:")
-        st.dataframe(X_train, hide_index=True)
-        st.write("Размер датафрейма :", X_train.shape)
-    with col3:
-        st.subheader("y_train:")
-        st.dataframe(y_train, hide_index=True)
-        st.write("Размер датафрейма :", y_train.shape[0])
-    st.divider()
-    col4, col5, col6 = st.columns([5, 0.3, 1])
-    with col4:
-        st.subheader("X_test:")
-        st.dataframe(X_test, hide_index=True)
-        st.write("Размер датафрейма :", X_test.shape)
-    with col6:
-        st.subheader("y_test:")
-        st.dataframe(y_test, hide_index=True)
-        st.write("Размер датафрейма :", y_test.shape[0])
-
-    st.subheader("2.Выбор алгоритма машинного обучения")
-
-    model = None
-
-    type_of_task_radio = st.radio(
-        "Выберите тип задачи:",
-        ["Регрессия", "Классификация"],
-        key=persist("type_of_task_radio"),
-    )
-    if type_of_task_radio == "Регрессия":
-        options_regression = st.selectbox(
-            "Выберите один из алгоритмов Регрессии: ",
-            regression_models,
-            key=persist("select_regression_model"),
-        )
-        if options_regression == "Linear Regression":
-            model = custom_linear_regression()
-        elif options_regression == "Decision Tree Regression":
-            options_decision_tree_regression = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_decision_tree_regression"),
-            )
-            if options_decision_tree_regression == "Выбрать параметры вручную":
-                col1, col2 = st.columns(2)
-                with col1:
-                    max_depth = st.number_input(
-                        "`max_depth` Максимальная глубина дерева",
-                        1,
-                        100,
-                        3,
-                        key=persist("number_for_decision_tree_regression_max_depth"),
-                    )
-                with col2:
-                    min_samples_split = st.number_input(
-                        "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
-                        2,
-                        100,
-                        2,
-                        key=persist(
-                            "number_for_decision_tree_regression_min_samples_split"
-                        ),
-                    )
-                col3, col4 = st.columns(2)
-                with col3:
-                    min_samples_leaf = st.number_input(
-                        "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
-                        1,
-                        100,
-                        1,
-                        key=persist(
-                            "number_for_decision_tree_regression_min_samples_leaf"
-                        ),
-                    )
-                with col4:
-                    ccp_alpha = st.slider(
-                        "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
-                        0.0,
-                        1.0,
-                        1.0,
-                        step=0.01,
-                        key=persist("slider_decision_tree_regression_ccp_alpha"),
-                    )
-                criterion_for_decision_tree_regression = [
-                    "squared_error",
-                    "friedman_mse",
-                    "absolute_error",
-                    "poisson",
-                ]
-                criterion = st.selectbox(
-                    "`criterion` Функция для измерения качества разделения",
-                    criterion_for_decision_tree_regression,
-                    key=persist("select_criterion_decision_tree_regression"),
-                )
-
-                model = custom_decision_tree_regression(
-                    criterion_c=criterion,
-                    max_depth_c=max_depth,
-                    min_samples_split_c=min_samples_split,
-                    min_samples_leaf_c=min_samples_leaf,
-                    ccp_alpha_c=ccp_alpha,
-                )
-            else:
-                model = DecisionTreeRegressor()
-
-        elif options_regression == "Random Forest Regression":
-            options_random_forest_regression = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_random_forest_regression"),
-            )
-            if options_random_forest_regression == "Выбрать параметры вручную":
-                n_estimators = st.slider(
-                    "`n_estimators` Количество деревьев в лесу",
-                    50,
-                    1000,
-                    100,
-                    key=persist("number_for_random_forest_regression_n_estimators"),
-                )
-                col1, col2 = st.columns(2)
-                with col1:
-                    max_depth = st.number_input(
-                        "`max_depth` Максимальная глубина каждого дерева",
-                        1,
-                        100,
-                        3,
-                        key=persist("number_for_random_forest_regression_max_depth"),
-                    )
-                with col2:
-                    min_samples_split = st.number_input(
-                        "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
-                        2,
-                        100,
-                        2,
-                        key=persist(
-                            "number_for_random_forest_regression_min_samples_split"
-                        ),
-                    )
-                col3, col4 = st.columns(2)
-                with col3:
-                    min_samples_leaf = st.number_input(
-                        "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
-                        1,
-                        100,
-                        1,
-                        key=persist(
-                            "number_for_random_forest_regression_min_samples_leaf"
-                        ),
-                    )
-                with col4:
-                    ccp_alpha = st.slider(
-                        "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
-                        0.0,
-                        1.0,
-                        0.0,
-                        step=0.01,
-                        key=persist("slider_random_forest_regression_ccp_alpha"),
-                    )
-                criterion_for_random_forest_regression = [
-                    "squared_error",
-                    "friedman_mse",
-                    "absolute_error",
-                    "poisson",
-                ]
-                criterion = st.selectbox(
-                    "`criterion` Функция для измерения качества разделения",
-                    criterion_for_random_forest_regression,
-                    key=persist("select_criterion_random_forest_regression"),
-                )
-
-                model = custom_random_forest_regression(
-                    n_estimators,
-                    criterion,
-                    max_depth,
-                    min_samples_split,
-                    min_samples_leaf,
-                    ccp_alpha,
-                )
-            else:
-                model = RandomForestRegressor()
-
-        elif options_regression == "Support Vector Machine Regression":
-            options_svm_regression = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_svm_regression"),
-            )
-            if options_svm_regression == "Выбрать параметры вручную":
-                col1, col2 = st.columns(2)
-                with col1:
-                    kernel = st.selectbox(
-                        "`kernel` Указывает тип ядра, который будет использоваться в алгоритме.",
-                        ["linear", "poly", "rbf", "sigmoid", "precomputed"],
-                        key=persist("select_kernel_svm_regression"),
-                    )
-                with col2:
-                    degree = st.number_input(
-                        "`degree` Степень полиномиальной функции ядра ('poly')",
-                        1,
-                        10,
-                        3,
-                        key=persist("number_for_svm_regression_degree"),
-                    )
-                model = custom_svr(kernel, degree)
-            else:
-                model = SVR()
-        elif options_regression == "Gradient Boosting Regression":
-            options_gbc_regression = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_gbc_regression"),
-            )
-            if options_gbc_regression == "Выбрать параметры вручную":
-                col1, col2 = st.columns(2)
-                with col1:
-                    loss = st.selectbox(
-                        "`loss` Функция потерь, которую необходимо оптимизировать",
-                        ["squared_error", "absolute_error", "huber", "quantile"],
-                        key=persist("select_loss_gbc_regression"),
-                    )
-                with col2:
-                    learning_rate = st.slider(
-                        "`learning_rate` Скорость обучения уменьшает вклад каждого дерева на величину learning_rate",
-                        0.0,
-                        1.0,
-                        0.1,
-                        step=0.01,
-                        key=persist("number_for_gbc_regression_learning_rate"),
-                    )
-                n_estimators = st.slider(
-                    "`n_estimators` Количество деревьев в лесу",
-                    50,
-                    1000,
-                    100,
-                    key=persist("number_for_gbc_regression_n_estimators"),
-                )
-                col3, col4 = st.columns(2)
-                with col3:
-                    max_depth = st.number_input(
-                        "`max_depth` Максимальная глубина каждого дерева",
-                        1,
-                        100,
-                        3,
-                        key=persist("number_for_gbc_regression_max_depth"),
-                    )
-                with col4:
-                    min_samples_split = st.number_input(
-                        "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
-                        2,
-                        100,
-                        2,
-                        key=persist("number_for_gbc_regression_min_samples_split"),
-                    )
-                col5, col6 = st.columns(2)
-                with col5:
-                    min_samples_leaf = st.number_input(
-                        "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
-                        1,
-                        100,
-                        1,
-                        key=persist("number_for_gbc_regression_min_samples_leaf"),
-                    )
-                with col6:
-                    ccp_alpha = st.slider(
-                        "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
-                        0.0,
-                        1.0,
-                        0.0,
-                        step=0.01,
-                        key=persist("slider_gbc_regression_ccp_alpha"),
-                    )
-                criterion_for_random_forest_classification = [
-                    "friedman_mse",
-                    "squared_error",
-                ]
-                criterion = st.selectbox(
-                    "`criterion` Функция для измерения качества разделения",
-                    criterion_for_random_forest_classification,
-                    key=persist("select_criterion_gbc_regression"),
-                )
-
-                model = custom_gbr(
-                    loss_c=loss,
-                    learning_rate_c=learning_rate,
-                    n_estimators_c=n_estimators,
-                    criterion_c=criterion,
-                    max_depth_c=max_depth,
-                    min_samples_split_c=min_samples_split,
-                    min_samples_leaf_c=min_samples_leaf,
-                    ccp_alpha_c=ccp_alpha,
-                )
-            else:
-                model = GradientBoostingRegressor()
-        else:
-            options_mlp_regression = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_mlpc"),
-            )
-            if options_mlp_regression == "Выбрать параметры вручную":
-                col1, col2 = st.columns(2)
-                with col1:
-                    activation = st.selectbox("`activation` Функция активации для скрытого слоя", ["relu", "logistic", "tanh", "identity"], key=persist("select_activation_mlpc"))
-                with col2:
-                    solver = st.selectbox("`solver` Решающая программа для оптимизации веса", ["adam", "lbfgs", "sgd"],  key=persist("select_solver_mlpc"))
-                model = custom_mlp_regressor(activation_func_c=activation, solver_c=solver)
-            else:
-                model = MLPRegressor()
-            
+    if "uploaded" not in st.session_state:
+        st.info("Сначала вы должны загрузить данные")
     else:
-        options_clf = st.selectbox(
-            "Выберите один из алгоритмов Классификации: ",
-            classification_models,
-            key=persist("select_classification_model"),
+        st.title("Тренировка и проверка модели")
+        regression_models = [
+            "Linear Regression",
+            "Decision Tree Regression",
+            "Random Forest Regression",
+            "Support Vector Machine Regression",
+            "Gradient Boosting Regression",
+            "Multi Layer Perceptron Regression"
+        ]
+        classification_models = [
+            "Logistic Regression",
+            "Decision Tree CLassifier",
+            "Random Forest Classification",
+            "Support Vector Machine CLassification",
+            "Gradient Boosting Classification",
+            "Multi Layer Perceptron Classifier"
+        ]
+
+        complete_df = st.session_state["data"]
+        st.subheader("Сохраненный датафрейм")
+        st.dataframe(complete_df, hide_index=True)
+        st.subheader("1.Разделение на тренировочный и тестовый датафрейм")
+        y_column = st.selectbox(
+            "Выберите целевой параметр, значение которого будут спрогнозированы:",
+            complete_df.columns,
+            key=persist("select_y_column"),
         )
-        if options_clf == "Logistic Regression":
-            options_logistic_regression = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_logistic_regression"),
+        X = delete_columns(complete_df, y_column)
+        y = complete_df[y_column]
+        col1, col2, col3 = st.columns([5, 0.3, 1])
+        with col1:
+            st.subheader("X:")
+            st.dataframe(X, hide_index=True)
+            st.write("Размер датафрейма :", X.shape)
+        with col3:
+            st.subheader("y:")
+            st.dataframe(y, hide_index=True)
+            st.write("Размер датафрейма :", y.shape[0])
+
+        size = st.slider(
+            "Выберите размер тестового датафрейма:",
+            0.0,
+            1.0,
+            0.2,
+            step=0.01,
+            key=persist("slider_size_of_test_dataset"),
+        )
+        st.write(f"Размер тестового датафрейма {size * 100} % от общего датафрейма")
+        X_train, X_test, y_train, y_test = custom_train_test_split(X, y, size=size)
+
+        col1, col2, col3 = st.columns([5, 0.3, 1])
+        with col1:
+            st.subheader("X_train:")
+            st.dataframe(X_train, hide_index=True)
+            st.write("Размер датафрейма :", X_train.shape)
+        with col3:
+            st.subheader("y_train:")
+            st.dataframe(y_train, hide_index=True)
+            st.write("Размер датафрейма :", y_train.shape[0])
+        st.divider()
+        col4, col5, col6 = st.columns([5, 0.3, 1])
+        with col4:
+            st.subheader("X_test:")
+            st.dataframe(X_test, hide_index=True)
+            st.write("Размер датафрейма :", X_test.shape)
+        with col6:
+            st.subheader("y_test:")
+            st.dataframe(y_test, hide_index=True)
+            st.write("Размер датафрейма :", y_test.shape[0])
+
+        st.subheader("2.Выбор алгоритма машинного обучения")
+
+        model = None
+
+        type_of_task_radio = st.radio(
+            "Выберите тип задачи:",
+            ["Регрессия", "Классификация"],
+            key=persist("type_of_task_radio"),
+        )
+        if type_of_task_radio == "Регрессия":
+            options_regression = st.selectbox(
+                "Выберите один из алгоритмов Регрессии: ",
+                regression_models,
+                key=persist("select_regression_model"),
             )
-            if options_logistic_regression == "Выбрать параметры вручную":
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    C = st.slider(
-                        "`C` Обратное значение силы регуляризации",
-                        0.0,
-                        1.0,
-                        1.0,
-                        step=0.01,
-                        key=persist("slider_for_logistic_regression_C"),
+            if options_regression == "Linear Regression":
+                model = custom_linear_regression()
+            elif options_regression == "Decision Tree Regression":
+                options_decision_tree_regression = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_decision_tree_regression"),
+                )
+                if options_decision_tree_regression == "Выбрать параметры вручную":
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        max_depth = st.number_input(
+                            "`max_depth` Максимальная глубина дерева",
+                            1,
+                            100,
+                            3,
+                            key=persist("number_for_decision_tree_regression_max_depth"),
+                        )
+                    with col2:
+                        min_samples_split = st.number_input(
+                            "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
+                            2,
+                            100,
+                            2,
+                            key=persist(
+                                "number_for_decision_tree_regression_min_samples_split"
+                            ),
+                        )
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        min_samples_leaf = st.number_input(
+                            "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
+                            1,
+                            100,
+                            1,
+                            key=persist(
+                                "number_for_decision_tree_regression_min_samples_leaf"
+                            ),
+                        )
+                    with col4:
+                        ccp_alpha = st.slider(
+                            "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
+                            0.0,
+                            1.0,
+                            1.0,
+                            step=0.01,
+                            key=persist("slider_decision_tree_regression_ccp_alpha"),
+                        )
+                    criterion_for_decision_tree_regression = [
+                        "squared_error",
+                        "friedman_mse",
+                        "absolute_error",
+                        "poisson",
+                    ]
+                    criterion = st.selectbox(
+                        "`criterion` Функция для измерения качества разделения",
+                        criterion_for_decision_tree_regression,
+                        key=persist("select_criterion_decision_tree_regression"),
                     )
-                with col2:
-                    max_iter = st.number_input(
-                        "` max_iter` Максимальное количество итераций, необходимое для сходимости решателей",
-                        10,
+
+                    model = custom_decision_tree_regression(
+                        criterion_c=criterion,
+                        max_depth_c=max_depth,
+                        min_samples_split_c=min_samples_split,
+                        min_samples_leaf_c=min_samples_leaf,
+                        ccp_alpha_c=ccp_alpha,
+                    )
+                else:
+                    model = DecisionTreeRegressor()
+
+            elif options_regression == "Random Forest Regression":
+                options_random_forest_regression = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_random_forest_regression"),
+                )
+                if options_random_forest_regression == "Выбрать параметры вручную":
+                    n_estimators = st.slider(
+                        "`n_estimators` Количество деревьев в лесу",
+                        50,
                         1000,
                         100,
-                        key=persist("number_for_logistic_regression_max_iter"),
+                        key=persist("number_for_random_forest_regression_n_estimators"),
                     )
-                with col3:
-                    l1_ratio = st.slider(
-                        "`l1_ratio` Параметр смешивания Elastic-Net",
-                        0.0,
-                        1.0,
-                        1.0,
-                        step=0.01,
-                        key=persist("slider_for_logistic_regression_l1_ratio"),
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        max_depth = st.number_input(
+                            "`max_depth` Максимальная глубина каждого дерева",
+                            1,
+                            100,
+                            3,
+                            key=persist("number_for_random_forest_regression_max_depth"),
+                        )
+                    with col2:
+                        min_samples_split = st.number_input(
+                            "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
+                            2,
+                            100,
+                            2,
+                            key=persist(
+                                "number_for_random_forest_regression_min_samples_split"
+                            ),
+                        )
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        min_samples_leaf = st.number_input(
+                            "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
+                            1,
+                            100,
+                            1,
+                            key=persist(
+                                "number_for_random_forest_regression_min_samples_leaf"
+                            ),
+                        )
+                    with col4:
+                        ccp_alpha = st.slider(
+                            "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
+                            0.0,
+                            1.0,
+                            0.0,
+                            step=0.01,
+                            key=persist("slider_random_forest_regression_ccp_alpha"),
+                        )
+                    criterion_for_random_forest_regression = [
+                        "squared_error",
+                        "friedman_mse",
+                        "absolute_error",
+                        "poisson",
+                    ]
+                    criterion = st.selectbox(
+                        "`criterion` Функция для измерения качества разделения",
+                        criterion_for_random_forest_regression,
+                        key=persist("select_criterion_random_forest_regression"),
                     )
 
-                model = custom_logistic_regression(
-                    C_c=C, max_iter_c=max_iter, l1_ratio_c=l1_ratio
+                    model = custom_random_forest_regression(
+                        n_estimators,
+                        criterion,
+                        max_depth,
+                        min_samples_split,
+                        min_samples_leaf,
+                        ccp_alpha,
+                    )
+                else:
+                    model = RandomForestRegressor()
+
+            elif options_regression == "Support Vector Machine Regression":
+                options_svm_regression = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_svm_regression"),
                 )
+                if options_svm_regression == "Выбрать параметры вручную":
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        kernel = st.selectbox(
+                            "`kernel` Указывает тип ядра, который будет использоваться в алгоритме.",
+                            ["linear", "poly", "rbf", "sigmoid", "precomputed"],
+                            key=persist("select_kernel_svm_regression"),
+                        )
+                    with col2:
+                        degree = st.number_input(
+                            "`degree` Степень полиномиальной функции ядра ('poly')",
+                            1,
+                            10,
+                            3,
+                            key=persist("number_for_svm_regression_degree"),
+                        )
+                    model = custom_svr(kernel, degree)
+                else:
+                    model = SVR()
+            elif options_regression == "Gradient Boosting Regression":
+                options_gbc_regression = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_gbc_regression"),
+                )
+                if options_gbc_regression == "Выбрать параметры вручную":
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        loss = st.selectbox(
+                            "`loss` Функция потерь, которую необходимо оптимизировать",
+                            ["squared_error", "absolute_error", "huber", "quantile"],
+                            key=persist("select_loss_gbc_regression"),
+                        )
+                    with col2:
+                        learning_rate = st.slider(
+                            "`learning_rate` Скорость обучения уменьшает вклад каждого дерева на величину learning_rate",
+                            0.0,
+                            1.0,
+                            0.1,
+                            step=0.01,
+                            key=persist("number_for_gbc_regression_learning_rate"),
+                        )
+                    n_estimators = st.slider(
+                        "`n_estimators` Количество деревьев в лесу",
+                        50,
+                        1000,
+                        100,
+                        key=persist("number_for_gbc_regression_n_estimators"),
+                    )
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        max_depth = st.number_input(
+                            "`max_depth` Максимальная глубина каждого дерева",
+                            1,
+                            100,
+                            3,
+                            key=persist("number_for_gbc_regression_max_depth"),
+                        )
+                    with col4:
+                        min_samples_split = st.number_input(
+                            "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
+                            2,
+                            100,
+                            2,
+                            key=persist("number_for_gbc_regression_min_samples_split"),
+                        )
+                    col5, col6 = st.columns(2)
+                    with col5:
+                        min_samples_leaf = st.number_input(
+                            "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
+                            1,
+                            100,
+                            1,
+                            key=persist("number_for_gbc_regression_min_samples_leaf"),
+                        )
+                    with col6:
+                        ccp_alpha = st.slider(
+                            "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
+                            0.0,
+                            1.0,
+                            0.0,
+                            step=0.01,
+                            key=persist("slider_gbc_regression_ccp_alpha"),
+                        )
+                    criterion_for_random_forest_classification = [
+                        "friedman_mse",
+                        "squared_error",
+                    ]
+                    criterion = st.selectbox(
+                        "`criterion` Функция для измерения качества разделения",
+                        criterion_for_random_forest_classification,
+                        key=persist("select_criterion_gbc_regression"),
+                    )
+
+                    model = custom_gbr(
+                        loss_c=loss,
+                        learning_rate_c=learning_rate,
+                        n_estimators_c=n_estimators,
+                        criterion_c=criterion,
+                        max_depth_c=max_depth,
+                        min_samples_split_c=min_samples_split,
+                        min_samples_leaf_c=min_samples_leaf,
+                        ccp_alpha_c=ccp_alpha,
+                    )
+                else:
+                    model = GradientBoostingRegressor()
             else:
-                model = LogisticRegression()
-        if options_clf == "Decision Tree CLassifier":
-            options_decision_tree_classification = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_decision_tree_classification"),
-            )
-            if options_decision_tree_classification == "Выбрать параметры вручную":
-                col1, col2 = st.columns(2)
-                with col1:
-                    max_depth = st.number_input(
-                        "`max_depth` Максимальная глубина дерева",
-                        1,
-                        100,
-                        3,
-                        key=persist(
-                            "number_for_decision_tree_classification_max_depth"
-                        ),
-                    )
-                with col2:
-                    min_samples_split = st.number_input(
-                        "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
-                        2,
-                        100,
-                        2,
-                        key=persist(
-                            "number_for_decision_tree_classification_min_samples_split"
-                        ),
-                    )
-                col3, col4 = st.columns(2)
-                with col3:
-                    min_samples_leaf = st.number_input(
-                        "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
-                        1,
-                        100,
-                        1,
-                        key=persist(
-                            "number_for_decision_tree_classification_min_samples_leaf"
-                        ),
-                    )
-                with col4:
-                    ccp_alpha = st.slider(
-                        "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
-                        0.0,
-                        1.0,
-                        0.0,
-                        step=0.01,
-                        key=persist("slider_decision_tree_classification_ccp_alpha"),
-                    )
-                criterion_for_decision_tree_classification = [
-                    "gini",
-                    "entropy",
-                    "log_loss",
-                ]
-                criterion = st.selectbox(
-                    "`criterion` Функция для измерения качества разделения",
-                    criterion_for_decision_tree_classification,
-                    key=persist("select_criterion_decision_tree_classification"),
+                options_mlp_regression = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_mlpc"),
                 )
-
-                model = custom_decision_tree_classification(
-                    criterion_c=criterion,
-                    max_depth_c=max_depth,
-                    min_samples_split_c=min_samples_split,
-                    min_samples_leaf_c=min_samples_leaf,
-                    ccp_alpha_c=ccp_alpha,
-                )
-            else:
-                model = DecisionTreeClassifier()
-
-        elif options_clf == "Random Forest Classification":
-            options_random_forest_classification = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_random_forest_classification"),
-            )
-            if options_random_forest_classification == "Выбрать параметры вручную":
-                n_estimators = st.slider(
-                    "`n_estimators` Количество деревьев в лесу",
-                    50,
-                    1000,
-                    100,
-                    key=persist("number_for_random_forest_classification_n_estimators"),
-                )
-                col1, col2 = st.columns(2)
-                with col1:
-                    max_depth = st.number_input(
-                        "`max_depth` Максимальная глубина каждого дерева",
-                        1,
-                        100,
-                        3,
-                        key=persist(
-                            "number_for_random_forest_classification_max_depth"
-                        ),
-                    )
-                with col2:
-                    min_samples_split = st.number_input(
-                        "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
-                        2,
-                        100,
-                        2,
-                        key=persist(
-                            "number_for_random_forest_classification_min_samples_split"
-                        ),
-                    )
-                col3, col4 = st.columns(2)
-                with col3:
-                    min_samples_leaf = st.number_input(
-                        "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
-                        1,
-                        100,
-                        1,
-                        key=persist(
-                            "number_for_random_forest_classification_min_samples_leaf"
-                        ),
-                    )
-                with col4:
-                    ccp_alpha = st.slider(
-                        "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
-                        0.0,
-                        1.0,
-                        0.0,
-                        step=0.01,
-                        key=persist("slider_random_forest_classification_ccp_alpha"),
-                    )
-                criterion_for_random_forest_classification = [
-                    "gini",
-                    "entropy",
-                    "log_loss",
-                ]
-                criterion = st.selectbox(
-                    "`criterion` Функция для измерения качества разделения",
-                    criterion_for_random_forest_classification,
-                    key=persist("select_criterion_random_forest_classification"),
-                )
-
-                model = custom_random_forest_classification(
-                    n_estimators,
-                    criterion,
-                    max_depth,
-                    min_samples_split,
-                    min_samples_leaf,
-                    ccp_alpha,
-                )
-            else:
-                model = RandomForestClassifier()
-
-        elif options_clf == "Support Vector Machine CLassification":
-            options_svm_classification = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_svm_classification"),
-            )
-            if options_svm_classification == "Выбрать параметры вручную":
-                col1, col2 = st.columns(2)
-                with col1:
-                    kernel = st.selectbox(
-                        "`kernel` Указывает тип ядра, который будет использоваться в алгоритме.",
-                        ["linear", "poly", "rbf", "sigmoid", "precomputed"],
-                        key=persist("select_kernel_svm_classification"),
-                    )
-                with col2:
-                    degree = st.number_input(
-                        "`degree` Степень полиномиальной функции ядра ('poly')",
-                        1,
-                        10,
-                        3,
-                        key=persist("number_for_svm_classification_degree"),
-                    )
-                model = custom_svc(kernel, degree)
-            else:
-                model = SVC()
-        elif options_clf == "Gradient Boosting Classification":
-            options_gbc_classification = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_gbc_classification"),
-            )
-            if options_gbc_classification == "Выбрать параметры вручную":
-                col1, col2 = st.columns(2)
-                with col1:
-                    loss = st.selectbox(
-                        "`loss` Функция потерь, которую необходимо оптимизировать",
-                        ["log_loss", "exponential"],
-                        key=persist("select_loss_gbc_classification"),
-                    )
-                with col2:
-                    learning_rate = st.slider(
-                        "`learning_rate` Скорость обучения уменьшает вклад каждого дерева на величину learning_rate",
-                        0.0,
-                        1.0,
-                        0.1,
-                        step=0.01,
-                        key=persist("number_for_gbc_classification_learning_rate"),
-                    )
-                n_estimators = st.slider(
-                    "`n_estimators` Количество деревьев в лесу",
-                    50,
-                    1000,
-                    100,
-                    key=persist("number_for_gbc_classification_n_estimators"),
-                )
-                col3, col4 = st.columns(2)
-                with col3:
-                    max_depth = st.number_input(
-                        "`max_depth` Максимальная глубина каждого дерева",
-                        1,
-                        100,
-                        3,
-                        key=persist("number_for_gbc_classification_max_depth"),
-                    )
-                with col4:
-                    min_samples_split = st.number_input(
-                        "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
-                        2,
-                        100,
-                        2,
-                        key=persist("number_for_gbc_classification_min_samples_split"),
-                    )
-                col5, col6 = st.columns(2)
-                with col5:
-                    min_samples_leaf = st.number_input(
-                        "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
-                        1,
-                        100,
-                        1,
-                        key=persist("number_for_gbc_classification_min_samples_leaf"),
-                    )
-                with col6:
-                    ccp_alpha = st.slider(
-                        "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
-                        0.0,
-                        1.0,
-                        0.0,
-                        step=0.01,
-                        key=persist("slider_gbc_classification_ccp_alpha"),
-                    )
-                criterion_for_random_forest_classification = [
-                    "friedman_mse",
-                    "squared_error",
-                ]
-                criterion = st.selectbox(
-                    "`criterion` Функция для измерения качества разделения",
-                    criterion_for_random_forest_classification,
-                    key=persist("select_criterion_gbc_classification"),
-                )
-
-                model = custom_gbc(
-                    loss_c=loss,
-                    learning_rate_c=learning_rate,
-                    n_estimators_c=n_estimators,
-                    criterion_c=criterion,
-                    max_depth_c=max_depth,
-                    min_samples_split_c=min_samples_split,
-                    min_samples_leaf_c=min_samples_leaf,
-                    ccp_alpha_c=ccp_alpha,
-                )
-            else:
-                model = GradientBoostingClassifier()
+                if options_mlp_regression == "Выбрать параметры вручную":
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        activation = st.selectbox("`activation` Функция активации для скрытого слоя", ["relu", "logistic", "tanh", "identity"], key=persist("select_activation_mlpc"))
+                    with col2:
+                        solver = st.selectbox("`solver` Решающая программа для оптимизации веса", ["adam", "lbfgs", "sgd"],  key=persist("select_solver_mlpc"))
+                    model = custom_mlp_regressor(activation_func_c=activation, solver_c=solver)
+                else:
+                    model = MLPRegressor()
+                
         else:
-            options_mlp_classification = st.radio(
-                "Сделайте выбор:",
-                ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
-                key=persist("choose_parameters_for_mlpc"),
+            options_clf = st.selectbox(
+                "Выберите один из алгоритмов Классификации: ",
+                classification_models,
+                key=persist("select_classification_model"),
             )
-            if options_mlp_classification == "Выбрать параметры вручную":
-                col1, col2 = st.columns(2)
-                with col1:
-                    activation = st.selectbox("`activation` Функция активации для скрытого слоя", ["relu", "logistic", "tanh", "identity"], key=persist("select_activation_mlpc"))
-                with col2:
-                    solver = st.selectbox("`solver` Решающая программа для оптимизации веса", ["adam", "lbfgs", "sgd"],  key=persist("select_solver_mlpc"))
-                model = custom_mlp_classifier(activation_func_c=activation, solver_c=solver)
+            if options_clf == "Logistic Regression":
+                options_logistic_regression = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_logistic_regression"),
+                )
+                if options_logistic_regression == "Выбрать параметры вручную":
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        C = st.slider(
+                            "`C` Обратное значение силы регуляризации",
+                            0.0,
+                            1.0,
+                            1.0,
+                            step=0.01,
+                            key=persist("slider_for_logistic_regression_C"),
+                        )
+                    with col2:
+                        max_iter = st.number_input(
+                            "` max_iter` Максимальное количество итераций, необходимое для сходимости решателей",
+                            10,
+                            1000,
+                            100,
+                            key=persist("number_for_logistic_regression_max_iter"),
+                        )
+                    with col3:
+                        l1_ratio = st.slider(
+                            "`l1_ratio` Параметр смешивания Elastic-Net",
+                            0.0,
+                            1.0,
+                            1.0,
+                            step=0.01,
+                            key=persist("slider_for_logistic_regression_l1_ratio"),
+                        )
+
+                    model = custom_logistic_regression(
+                        C_c=C, max_iter_c=max_iter, l1_ratio_c=l1_ratio
+                    )
+                else:
+                    model = LogisticRegression()
+            if options_clf == "Decision Tree CLassifier":
+                options_decision_tree_classification = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_decision_tree_classification"),
+                )
+                if options_decision_tree_classification == "Выбрать параметры вручную":
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        max_depth = st.number_input(
+                            "`max_depth` Максимальная глубина дерева",
+                            1,
+                            100,
+                            3,
+                            key=persist(
+                                "number_for_decision_tree_classification_max_depth"
+                            ),
+                        )
+                    with col2:
+                        min_samples_split = st.number_input(
+                            "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
+                            2,
+                            100,
+                            2,
+                            key=persist(
+                                "number_for_decision_tree_classification_min_samples_split"
+                            ),
+                        )
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        min_samples_leaf = st.number_input(
+                            "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
+                            1,
+                            100,
+                            1,
+                            key=persist(
+                                "number_for_decision_tree_classification_min_samples_leaf"
+                            ),
+                        )
+                    with col4:
+                        ccp_alpha = st.slider(
+                            "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
+                            0.0,
+                            1.0,
+                            0.0,
+                            step=0.01,
+                            key=persist("slider_decision_tree_classification_ccp_alpha"),
+                        )
+                    criterion_for_decision_tree_classification = [
+                        "gini",
+                        "entropy",
+                        "log_loss",
+                    ]
+                    criterion = st.selectbox(
+                        "`criterion` Функция для измерения качества разделения",
+                        criterion_for_decision_tree_classification,
+                        key=persist("select_criterion_decision_tree_classification"),
+                    )
+
+                    model = custom_decision_tree_classification(
+                        criterion_c=criterion,
+                        max_depth_c=max_depth,
+                        min_samples_split_c=min_samples_split,
+                        min_samples_leaf_c=min_samples_leaf,
+                        ccp_alpha_c=ccp_alpha,
+                    )
+                else:
+                    model = DecisionTreeClassifier()
+
+            elif options_clf == "Random Forest Classification":
+                options_random_forest_classification = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_random_forest_classification"),
+                )
+                if options_random_forest_classification == "Выбрать параметры вручную":
+                    n_estimators = st.slider(
+                        "`n_estimators` Количество деревьев в лесу",
+                        50,
+                        1000,
+                        100,
+                        key=persist("number_for_random_forest_classification_n_estimators"),
+                    )
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        max_depth = st.number_input(
+                            "`max_depth` Максимальная глубина каждого дерева",
+                            1,
+                            100,
+                            3,
+                            key=persist(
+                                "number_for_random_forest_classification_max_depth"
+                            ),
+                        )
+                    with col2:
+                        min_samples_split = st.number_input(
+                            "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
+                            2,
+                            100,
+                            2,
+                            key=persist(
+                                "number_for_random_forest_classification_min_samples_split"
+                            ),
+                        )
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        min_samples_leaf = st.number_input(
+                            "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
+                            1,
+                            100,
+                            1,
+                            key=persist(
+                                "number_for_random_forest_classification_min_samples_leaf"
+                            ),
+                        )
+                    with col4:
+                        ccp_alpha = st.slider(
+                            "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
+                            0.0,
+                            1.0,
+                            0.0,
+                            step=0.01,
+                            key=persist("slider_random_forest_classification_ccp_alpha"),
+                        )
+                    criterion_for_random_forest_classification = [
+                        "gini",
+                        "entropy",
+                        "log_loss",
+                    ]
+                    criterion = st.selectbox(
+                        "`criterion` Функция для измерения качества разделения",
+                        criterion_for_random_forest_classification,
+                        key=persist("select_criterion_random_forest_classification"),
+                    )
+
+                    model = custom_random_forest_classification(
+                        n_estimators,
+                        criterion,
+                        max_depth,
+                        min_samples_split,
+                        min_samples_leaf,
+                        ccp_alpha,
+                    )
+                else:
+                    model = RandomForestClassifier()
+
+            elif options_clf == "Support Vector Machine CLassification":
+                options_svm_classification = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_svm_classification"),
+                )
+                if options_svm_classification == "Выбрать параметры вручную":
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        kernel = st.selectbox(
+                            "`kernel` Указывает тип ядра, который будет использоваться в алгоритме.",
+                            ["linear", "poly", "rbf", "sigmoid", "precomputed"],
+                            key=persist("select_kernel_svm_classification"),
+                        )
+                    with col2:
+                        degree = st.number_input(
+                            "`degree` Степень полиномиальной функции ядра ('poly')",
+                            1,
+                            10,
+                            3,
+                            key=persist("number_for_svm_classification_degree"),
+                        )
+                    model = custom_svc(kernel, degree)
+                else:
+                    model = SVC()
+            elif options_clf == "Gradient Boosting Classification":
+                options_gbc_classification = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_gbc_classification"),
+                )
+                if options_gbc_classification == "Выбрать параметры вручную":
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        loss = st.selectbox(
+                            "`loss` Функция потерь, которую необходимо оптимизировать",
+                            ["log_loss", "exponential"],
+                            key=persist("select_loss_gbc_classification"),
+                        )
+                    with col2:
+                        learning_rate = st.slider(
+                            "`learning_rate` Скорость обучения уменьшает вклад каждого дерева на величину learning_rate",
+                            0.0,
+                            1.0,
+                            0.1,
+                            step=0.01,
+                            key=persist("number_for_gbc_classification_learning_rate"),
+                        )
+                    n_estimators = st.slider(
+                        "`n_estimators` Количество деревьев в лесу",
+                        50,
+                        1000,
+                        100,
+                        key=persist("number_for_gbc_classification_n_estimators"),
+                    )
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        max_depth = st.number_input(
+                            "`max_depth` Максимальная глубина каждого дерева",
+                            1,
+                            100,
+                            3,
+                            key=persist("number_for_gbc_classification_max_depth"),
+                        )
+                    with col4:
+                        min_samples_split = st.number_input(
+                            "`min_samples_split` Минимальное количество образцов, необходимое для разбиения внутреннего узла",
+                            2,
+                            100,
+                            2,
+                            key=persist("number_for_gbc_classification_min_samples_split"),
+                        )
+                    col5, col6 = st.columns(2)
+                    with col5:
+                        min_samples_leaf = st.number_input(
+                            "`min_samples_leaf` Минимальное количество образцов, необходимое для нахождения в узле листа",
+                            1,
+                            100,
+                            1,
+                            key=persist("number_for_gbc_classification_min_samples_leaf"),
+                        )
+                    with col6:
+                        ccp_alpha = st.slider(
+                            "`ccp_alpha` Параметр сложности, используемый для обрезки по принципу минимальная стоимость - сложность",
+                            0.0,
+                            1.0,
+                            0.0,
+                            step=0.01,
+                            key=persist("slider_gbc_classification_ccp_alpha"),
+                        )
+                    criterion_for_random_forest_classification = [
+                        "friedman_mse",
+                        "squared_error",
+                    ]
+                    criterion = st.selectbox(
+                        "`criterion` Функция для измерения качества разделения",
+                        criterion_for_random_forest_classification,
+                        key=persist("select_criterion_gbc_classification"),
+                    )
+
+                    model = custom_gbc(
+                        loss_c=loss,
+                        learning_rate_c=learning_rate,
+                        n_estimators_c=n_estimators,
+                        criterion_c=criterion,
+                        max_depth_c=max_depth,
+                        min_samples_split_c=min_samples_split,
+                        min_samples_leaf_c=min_samples_leaf,
+                        ccp_alpha_c=ccp_alpha,
+                    )
+                else:
+                    model = GradientBoostingClassifier()
             else:
-                model = MLPClassifier()
-            
-            
-    st.write(model)
+                options_mlp_classification = st.radio(
+                    "Сделайте выбор:",
+                    ["Выбрать параметры вручную", "Выбрать дефолтную модель"],
+                    key=persist("choose_parameters_for_mlpc"),
+                )
+                if options_mlp_classification == "Выбрать параметры вручную":
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        activation = st.selectbox("`activation` Функция активации для скрытого слоя", ["relu", "logistic", "tanh", "identity"], key=persist("select_activation_mlpc"))
+                    with col2:
+                        solver = st.selectbox("`solver` Решающая программа для оптимизации веса", ["adam", "lbfgs", "sgd"],  key=persist("select_solver_mlpc"))
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        number_layers = st.slider("`hidden_layer` Это количество скрытых нейронов в слое", 32, 256, 1, key=persist("select_layers_mlpc"))
+                    model = custom_mlp_classifier(activation_func_c=activation, solver_c=solver, number_layers_c=number_layers)
+                else:
+                    model = MLPClassifier()
+                
+                
+        st.write(model)
 
-    color_theme_list = [
-        "Blues",
-        "viridis",
-        "plasma",
-        "inferno",
-        "magma",
-        "cividis",
-        "Greys",
-        "Purples",
-        "Greens",
-        "Oranges",
-        "Reds",
-        "YlOrBr",
-        "YlOrRd",
-        "OrRd",
-        "PuRd",
-        "RdPu",
-        "BuPu",
-        "GnBu",
-        "PuBu",
-        "YlGnBu",
-        "PuBuGn",
-        "BuGn",
-        "YlGn",
-        "PiYG",
-        "PRGn",
-        "BrBG",
-        "PuOr",
-        "RdGy",
-        "RdBu",
-        "RdYlBu",
-        "RdYlGn",
-        "Spectral",
-        "coolwarm",
-        "bwr",
-        "seismic",
-    ]
-    show_results_visualizations = False
+        color_theme_list = [
+            "Blues",
+            "viridis",
+            "plasma",
+            "inferno",
+            "magma",
+            "cividis",
+            "Greys",
+            "Purples",
+            "Greens",
+            "Oranges",
+            "Reds",
+            "YlOrBr",
+            "YlOrRd",
+            "OrRd",
+            "PuRd",
+            "RdPu",
+            "BuPu",
+            "GnBu",
+            "PuBu",
+            "YlGnBu",
+            "PuBuGn",
+            "BuGn",
+            "YlGn",
+            "PiYG",
+            "PRGn",
+            "BrBG",
+            "PuOr",
+            "RdGy",
+            "RdBu",
+            "RdYlBu",
+            "RdYlGn",
+            "Spectral",
+            "coolwarm",
+            "bwr",
+            "seismic",
+        ]
+        show_results_visualizations = False
 
-    if st.checkbox("Обучить и проверить модель", key=persist("checkbox_model_see")):
-        show_results_visualizations = True
-        model, pred = train_and_predict(model, X_train, y_train, X_test)
-        if type_of_task_radio == "Регрессия":
-            r2 = r2_score(y_test, pred)
-            mae = mean_absolute_error(y_test, pred)
-            mse = mean_squared_error(y_test, pred)
-            regression_score = pd.DataFrame(
-                {"R_2": r2, "Mean Absolute Error": mae, "Mean Squared Error": mse},
-                index=[0],
+        if st.checkbox("Обучить и проверить модель", key=persist("checkbox_model_see")):
+            show_results_visualizations = True
+            model, pred = train_and_predict(model, X_train, y_train, X_test)
+            if type_of_task_radio == "Регрессия":
+                r2 = r2_score(y_test, pred)
+                mae = mean_absolute_error(y_test, pred)
+                mse = mean_squared_error(y_test, pred)
+                regression_score = pd.DataFrame(
+                    {"R_2": r2, "Mean Absolute Error": mae, "Mean Squared Error": mse},
+                    index=[0],
+                )
+                st.dataframe(regression_score, hide_index=True)
+            else:
+                acc = accuracy_score(y_test, pred)
+                if y_test.nunique()!=2:
+                    f1 = f1_score(y_test, pred, average='micro')
+                    precision = precision_score(y_test, pred, average='micro')
+                    recall = recall_score(y_test, pred, average='micro')
+                else:
+                    f1 = f1_score(y_test, pred)
+                    precision = precision_score(y_test, pred)
+                    recall = recall_score(y_test, pred)
+                classification_score = pd.DataFrame(
+                    {
+                        "Accuracy": acc,
+                        "F1_score": f1,
+                        "Precision": precision,
+                        "Recall": recall,
+                    },
+                    index=[0],
+                )
+                st.write("Результаты:")
+                st.dataframe(classification_score, hide_index=True)
+
+        # Assuming your model is named `model` and is already trained
+        filename = "Completed_model.joblib"
+        joblib.dump(model, filename)  # Save the model to a file
+
+        # Open the file in binary mode to pass to the download button
+        with open(filename, "rb") as file:
+            st.download_button(
+                label="Cкачать готовую модель",
+                data=file,
+                file_name=filename,
+                mime="application/octet-stream",
             )
-            st.dataframe(regression_score, hide_index=True)
+
+        st.subheader("3.Визуализация результатов")
+        if show_results_visualizations:
+            if type_of_task_radio == "Регрессия":
+                color = st.color_picker(
+                    "Выберите цвет", "#00f900", key=persist("color_for_result")
+                )
+                regression_result_visualization(y_test, pred, color)
+            else:
+                color = st.selectbox(
+                    "Выберите схему цветов для визуализации", color_theme_list
+                )
+                confusion_matrix_visualization(y_test, pred, color)
         else:
-            acc = accuracy_score(y_test, pred)
-            f1 = f1_score(y_test, pred)
-            precision = precision_score(y_test, pred)
-            recall = recall_score(y_test, pred)
-            classification_score = pd.DataFrame(
-                {
-                    "Accuracy": acc,
-                    "F1_score": f1,
-                    "Precision": precision,
-                    "Recall": recall,
-                },
-                index=[0],
-            )
-            st.write("Результаты:")
-            st.dataframe(classification_score, hide_index=True)
-
-    # Assuming your model is named `model` and is already trained
-    filename = "Completed_model.joblib"
-    joblib.dump(model, filename)  # Save the model to a file
-
-    # Open the file in binary mode to pass to the download button
-    with open(filename, "rb") as file:
-        st.download_button(
-            label="Cкачать готовую модель",
-            data=file,
-            file_name=filename,
-            mime="application/octet-stream",
-        )
-
-    st.subheader("3.Визуализация результатов")
-    if show_results_visualizations:
-        if type_of_task_radio == "Регрессия":
-            color = st.color_picker(
-                "Выберите цвет", "#00f900", key=persist("color_for_result")
-            )
-            regression_result_visualization(y_test, pred, color)
-        else:
-            color = st.selectbox(
-                "Выберите схему цветов для визуализации", color_theme_list
-            )
-            confusion_matrix_visualization(y_test, pred, color)
-    else:
-        st.info("Сначала нужно обучить модель и получить результаты")
+            st.info("Сначала нужно обучить модель и получить результаты")
 
 
 _PERSIST_STATE_KEY = f"{__name__}_PERSIST"
@@ -1925,7 +1931,7 @@ def custom_train_test_split(X, y, size=0.2):
 
 def confusion_matrix_visualization(y_true, y_pred, input_color="Blues"):
     cm = confusion_matrix(y_true, y_pred)
-    fig = plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(10, 10))
     sns.heatmap(cm, annot=True, fmt="d", cmap=input_color, cbar=False)
     plt.xlabel("Predicted labels")
     plt.ylabel("True labels")
@@ -1942,9 +1948,9 @@ def regression_result_visualization(y_true, y_pred, input_color):
 
 
 def correlation_matrix_visualize(data, color):
-    fig = plt.figure(figsize=(10, 8))
+    fig = plt.figure(figsize=(15, 15))
     correlation = data.corr()
-    sns.heatmap(correlation, annot=True, cmap=color)
+    sns.heatmap(correlation, annot=True, cmap=color, fmt=".2f")
     plt.title("Correlation of Features")
 
     st.pyplot(fig)
@@ -2065,10 +2071,12 @@ def custom_gbr(
 def custom_mlp_classifier(
     activation_func_c="relu",
     solver_c="adam",
+    number_layers_c=100
 ):
     model = MLPClassifier(
         activation=activation_func_c,
-        solver=solver_c
+        solver=solver_c,
+        hidden_layer_sizes=number_layers_c,
     )
     return model
 
