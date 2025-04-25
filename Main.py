@@ -38,6 +38,14 @@ from streamlit import session_state as _state
 
 st.set_page_config(layout="wide")
 
+st.markdown("""
+    <style>
+    * {
+        font-family: 'Roboto', sans-serif !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 def main():
     pages = {
         "Главная страница": page_first,
