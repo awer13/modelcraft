@@ -77,7 +77,7 @@ def page_first():
     current_script_dir = os.path.dirname(os.path.abspath(__file__))
     algo_path = Image.open(os.path.join(current_script_dir, "Algorithm.png"))
 
-    st.image(algo_path, caption="Алгоритм сайта")
+    st.image(algo_path, caption="Алгоритм платформы")
 
     st.subheader("Зачем?")
     st.write(
